@@ -123,13 +123,13 @@ class ForeCast extends React.Component {
           <div className="card-divider">
             Current Condition             </div>
           <div className="card-section">
-            <div class="row">
-              <div class="small-4 columns"><p>Current: {this.state.currentDegree}º</p>
+            <div className="row">
+              <div className="small-4 columns"><p>Current: {this.state.currentDegree}º</p>
                 <p>Low: {this.state.currentLow}º</p>
                 <p>High: {this.state.currentHigh}º</p>
               </div>
-              <div class="columns">              <img style={{ height: '110%' }} src={`http://openweathermap.org/img/w/${this.state.currentIcon}.png`} alt=""></img></div>
-              <div class="columns"><p>Humidity: {this.state.humidity}%</p>
+              <div className="columns">              <img style={{ height: '110%' }} src={`http://openweathermap.org/img/w/${this.state.currentIcon}.png`} alt=""></img></div>
+              <div className="columns"><p>Humidity: {this.state.humidity}%</p>
                 <p>Wind: {this.state.wind} MPH {this.converDegreeToCompas(this.state.windDegree)} </p></div>
             </div>
 

@@ -15,8 +15,15 @@ class Home extends React.Component {
       <div>
         <div className='row' >
           <div className='columns' >
-            <Link to={`/${this.props.state.currentLocation}`} ><WeatherCard icon={this.props.state.currentIcon} city={this.props.state.currentLocation} degree={this.props.state.currentDegree} details={this.props.state.currentDetails} /></Link>
-          </div>
+            {(this.props.state.waiting)
+              ? <WeatherCard waiting={this.props.state.waiting} />
+
+              : <Link to={`/${this.props.state.currentLocation}`} ><WeatherCard icon={this.props.state.currentIcon} city={this.props.state.currentLocation} degree={this.props.state.currentDegree} details={this.props.state.currentDetails} /></Link>
+
+
+
+
+            }  </div>
 
           <div className='columns' > <Link to={`/${this.props.state.city1}`}>< WeatherCard city={this.props.state.city1} icon={this.props.state.city1Icon} degree={this.props.state.city1Temp} details={this.props.state.city1Details} /></Link>
           </div>

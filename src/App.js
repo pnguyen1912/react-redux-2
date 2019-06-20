@@ -16,7 +16,8 @@ class App extends React.Component {
       currentIcon: '',
       errorMessage: '',
       city1: this.props.city[0].name,
-      city2: this.props.city[1].name
+      city2: this.props.city[1].name,
+      waiting: true,
     }
   }
 
@@ -29,7 +30,7 @@ class App extends React.Component {
         axios.get(`https://api.openweathermap.org/data/2.5/weather?APPID=4a5ca2f74c03252e2458e71a91e38bdf&lat=${lat}&lon=${long}&units=imperial`)
           .then(response => {
             console.log(response)
-            this.setState({ currentLocation: `${response.data.name}, ${response.data.sys.country}`, currentIcon: response.data.weather[0].icon, currentDegree: Math.floor(response.data.main.temp), currentDetails: response.data.weather[0].main })
+            this.setState({ currentLocation: `${response.data.name}, ${response.data.sys.country}`, currentIcon: response.data.weather[0].icon, currentDegree: Math.floor(response.data.main.temp), currentDetails: response.data.weather[0].main, waiting: false })
 
           })
           .catch(err => console.log(err))
@@ -88,10 +89,7 @@ class App extends React.Component {
         <div >
           <Link to='/'><header>
             Acme Weather</header></Link>
-          <input value={this.state.input} onChange={e => this.setState({ input: e.target.value })} onKeyDown={e => e.key === 'Enter' ? this.searchCity() : null} placeholder="Search City" type="text" ></input>
-
-
-
+          <input value={this.state.input} onChange={e => this.setState({ input: e.target.value })} onKeyDown={e => e.key === 'Enter' ? this.searchCity() : null} placeholder="Search City" type="text" />
           <ul className="menu" >
             {this.props.history.map(e =>
               <Link to={`/${e.name}`} >{e.name} {Math.floor(e.main.temp)}° <img style={{ height: '80%' }} src={`http://openweathermap.org/img/w/${e.weather[0].icon}.png`} alt=""></img></Link>

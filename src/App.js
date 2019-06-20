@@ -1,6 +1,5 @@
 import React from 'react';
 import { Route, Link, BrowserRouter } from 'react-router-dom'
-import WeatherCard from './components/WeatherCard'
 import axios from 'axios'
 import { addHistory } from './store/action'
 import { connect } from 'react-redux'
@@ -14,9 +13,10 @@ class App extends React.Component {
       currentLocation: 'Current Location',
       currentDegree: '--',
       currentDetails: '--',
+      currentIcon: '',
       errorMessage: '',
-      city1: 'San Diego, US',
-      city2: 'Orlando, US'
+      city1: this.props.city[0].name,
+      city2: this.props.city[1].name
     }
   }
 
@@ -29,7 +29,8 @@ class App extends React.Component {
         axios.get(`https://api.openweathermap.org/data/2.5/weather?APPID=4a5ca2f74c03252e2458e71a91e38bdf&lat=${lat}&lon=${long}&units=imperial`)
           .then(response => {
             console.log(response)
-            this.setState({ currentLocation: `${response.data.name}, ${response.data.sys.country}`, currentDegree: Math.floor(response.data.main.temp), currentDetails: response.data.weather[0].main })
+            this.setState({ currentLocation: `${response.data.name}, ${response.data.sys.country}`, currentIcon: response.data.weather[0].icon, currentDegree: Math.floor(response.data.main.temp), currentDetails: response.data.weather[0].main })
+
           })
           .catch(err => console.log(err))
 
@@ -42,12 +43,12 @@ class App extends React.Component {
     axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${this.state.city1}&units=imperial&APPID=4a5ca2f74c03252e2458e71a91e38bdf`)
       .then(response => {
         console.log(response)
-        this.setState({ city1Temp: Math.floor(response.data.main.temp), city1Details: response.data.weather[0].main })
+        this.setState({ city1Temp: Math.floor(response.data.main.temp), city1Details: response.data.weather[0].main, city1Icon: response.data.weather[0].icon })
       })
     axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${this.state.city2}&units=imperial&APPID=4a5ca2f74c03252e2458e71a91e38bdf`)
       .then(response => {
         console.log(response)
-        this.setState({ city2Temp: Math.floor(response.data.main.temp), city2Details: response.data.weather[0].main })
+        this.setState({ city2Temp: Math.floor(response.data.main.temp), city2Details: response.data.weather[0].main, city2Icon: response.data.weather[0].icon })
       })
   }
 
@@ -57,8 +58,13 @@ class App extends React.Component {
       console.log('Cannot be empty')
       this.setState({ success: false })
       return false
-    } else return true
+    }
+    if (this.props.history.map(item => item.name).includes(event)) {
+      return false
+    }
+    return true
   }
+
 
 
   searchCity = () => {
@@ -88,10 +94,10 @@ class App extends React.Component {
 
           <ul className="menu" >
             {this.props.history.map(e =>
-              <Link to={`/${e.name}`} >{e.name} {Math.floor(e.main.temp)} °</Link>
+              <Link to={`/${e.name}`} >{e.name} {Math.floor(e.main.temp)}° <img style={{ height: '80%' }} src={`http://openweathermap.org/img/w/${e.weather[0].icon}.png`} alt=""></img></Link>
 
             )}
-            <Link to={`/${this.state.currentLocation}`}>{this.state.currentLocation} {this.state.currentDegree} °</Link>
+            <Link to={`/${this.state.currentLocation}`}>{this.state.currentLocation} {this.state.currentDegree}°<img style={{ height: '80%' }} src={`http://openweathermap.org/img/w/${this.state.currentIcon}.png`} alt=""></img></Link>
           </ul>
 
 
@@ -101,13 +107,13 @@ class App extends React.Component {
 
 
           <Route exact path='/' render={() => <Home state={this.state} />} />
-          <Route path={`/${this.state.currentLocation}`} render={() => <ForeCast city={this.state.currentLocation} />} />
+          <Route path={`/${this.state.currentLocation}`} render={() => <ForeCast cityname={this.state.currentLocation} />} />
           {this.props.history.map(e =>
-            <Route path={`/${e.name}`} render={() => <ForeCast city={e.name} />} />
+            <Route path={`/${e.name}`} render={() => <ForeCast cityname={e.name} />} />
           )
           }
-          <Route path={`/${this.state.city1}`} render={() => <ForeCast city={this.state.city1} />} />
-          <Route path={`/${this.state.city2}`} render={() => <ForeCast city={this.state.city2} />} />
+          <Route path={`/${this.state.city1}`} render={() => <ForeCast cityname={this.state.city1} />} />
+          <Route path={`/${this.state.city2}`} render={() => <ForeCast cityname={this.state.city2} />} />
 
 
 
@@ -126,6 +132,7 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     history: state.history,
+    city: state.city
   }
 }
 

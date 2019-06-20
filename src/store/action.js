@@ -1,7 +1,7 @@
 import { ADD_CITY } from './types';
 import { ADD_HISTORY } from './types';
 
-export const addPerson = city => ({
+export const addCity = city => ({
   type: ADD_CITY,
   payload: city,
 });

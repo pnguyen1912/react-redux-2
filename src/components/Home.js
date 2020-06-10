@@ -4,6 +4,7 @@ import { Link, Route } from 'react-router-dom'
 import ForeCast from './ForeCast'
 import { connect } from 'react-redux'
 import { addCity } from '../store/action'
+import NewComponents from './NewComponents';
 class Home extends React.Component {
   constructor(props) {
     super(props)
@@ -13,6 +14,7 @@ class Home extends React.Component {
   render() {
     return (
       <div>
+        <NewComponents />
         <div className='row' >
           <div className='columns' >
             {(this.props.state.waiting)
